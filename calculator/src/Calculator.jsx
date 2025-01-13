@@ -1,53 +1,70 @@
 import React, { useState } from 'react';
 import './Calculator.css';
 
-function Calculator() {
-  const [expression, setExpression] = useState('');
-  const [result, setResult] = useState('');
-
-  const handleButtonClick = (value) => {
-    if (value === '=') {
+const Calculator = () => {
+    const [expression, setExpression] = useState('');
+    const [result, setResult] = useState('0');
+  
+    const appendValue = (value) => {
+      if (value === '=') {
+        evaluateExpression();
+      } else {
+        setExpression((prev) => prev + value);
+      }
+    };
+  
+    const clearExpression = () => {
+      setExpression('');
+      setResult('0');
+    };
+  
+    const evaluateExpression = () => {
+      if (!expression) {
+        setResult('Error');
+        return;
+      }
+  
       try {
-        const evalResult = eval(expression); 
-        setResult(evalResult);
-      } catch {
+        const evalResult = eval(expression);
+        setResult(isNaN(evalResult) ? 'NaN' : evalResult);
+      } catch (error) {
         setResult('Error');
       }
-    } else if (value === 'C') {
-      setExpression('');
-      setResult('');
-    } else {
-      setExpression((prev) => prev + value);
-    }
-  };
-
-  return (
-    <div className="calculator-container">
-      <div className="calculator">
-      <h1> React Calculator</h1>
-        <input
-          type="text"
-          value={expression}
-          readOnly
-          className="calculator-display"
-        />
-        <div className="calculator-result">{result}</div>
-        <div className="calculator-buttons">
-          {['7', '8', '9', '/', '4', '5', '6', '*', '1', '2', '3', '-', '0', 'C', '=', '+'].map(
-            (btn) => (
-              <button
-                key={btn}
-                onClick={() => handleButtonClick(btn)}
-                className="calculator-button"
-              >
-                {btn}
-              </button>
-            )
-          )}
+    };
+  
+    return (
+      <div className="calculator-container">
+        <h1 className="calculator-title">React Calculator</h1>
+        <div className="calculator">
+          <input
+            type="text"
+            className="input-field"
+            value={expression}
+            readOnly
+          />
+          <div className="result" id="result">{result}</div>
+          <div className="button-container">
+            <button className="button" onClick={() => appendValue('7')}>7</button>
+            <button className="button" onClick={() => appendValue('8')}>8</button>
+            <button className="button" onClick={() => appendValue('9')}>9</button>
+            <button className="button" onClick={() => appendValue('+')}>+</button>
+            <button className="button" onClick={() => appendValue('4')}>4</button>
+            <button className="button" onClick={() => appendValue('5')}>5</button>
+            <button className="button" onClick={() => appendValue('6')}>6</button>
+            <button className="button" onClick={() => appendValue('-')}>-</button>
+            <button className="button" onClick={() => appendValue('1')}>1</button>
+            <button className="button" onClick={() => appendValue('2')}>2</button>
+            <button className="button" onClick={() => appendValue('3')}>3</button>
+            <button className="button" onClick={() => appendValue('*')}>*</button>
+            <button className="button clear" onClick={clearExpression}>C</button>
+            <button className="button" onClick={() => appendValue('0')}>0</button>
+            <button className="button" onClick={() => appendValue('=')}>=</button>
+            <button className="button" onClick={() => appendValue('/')}>/</button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-export default Calculator;
+    );
+  };
+  
+  export default Calculator;
+  
